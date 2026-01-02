@@ -13,20 +13,32 @@
 
 El proyecto implementa un flujo de datos moderno donde la ingesta, el procesamiento y la visualización están desacoplados.
 
-```mermaid
 graph TD
-    subgraph "Local / Edge"
-        Sim[🐍 Python Chaos Script] -->|1. Inyección de Datos (TCP)| SQL_Public
+    %% Definición de Nodos y Subgrafos
+    subgraph Local ["💻 Local / Edge"]
+        Sim["🐍 Python Chaos Script"]
     end
 
-    subgraph "Azure Cloud Infrastructure"
-        SQL_Public[(🛢️ Azure SQL Database)] 
-        
-        WebApp[💻 Azure App Service] -->|2. Lectura en Tiempo Real| SQL_Public
-        WebApp -->|3. IA Generativa| OpenAI[🧠 Azure OpenAI]
-        
-        User[👨‍🏫 Profesor Dashboard] -->|4. HTTPS| WebApp
+    subgraph Azure ["☁️ Azure Cloud Infrastructure"]
+        SQL_Public[("🛢️ Azure SQL Database")]
+        WebApp["💻 Azure App Service"]
+        OpenAI["🧠 Azure OpenAI"]
     end
+
+    User["👨‍🏫 Profesor Dashboard"]
+
+    %% Relaciones
+    Sim -->|"1. Inyección de Datos (TCP)"| SQL_Public
+    WebApp -->|"2. Lectura en Tiempo Real"| SQL_Public
+    WebApp -->|"3. IA Generativa"| OpenAI
+    User -->|"4. HTTPS"| WebApp
+
+    %% Estilos (Opcional, para que se vea pro)
+    classDef azure fill:#0072C6,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef local fill:#333,stroke:#fff,stroke-width:2px,color:#fff;
+    
+    class SQL_Public,WebApp,OpenAI azure;
+    class Sim,Local local;
 
 🧩 Componentes Clave
 
@@ -39,6 +51,7 @@ graph TD
 🚀 Instalación y Configuración (Para Desarrolladores)
 
 Sigue estos pasos para levantar el entorno de desarrollo local.
+
 1. Prerrequisitos
 
     Python 3.9+
@@ -53,21 +66,25 @@ Bash
 git clone [https://github.com/TU_USUARIO/Eduinnovatech-Cloud.git](https://github.com/TU_USUARIO/Eduinnovatech-Cloud.git)
 cd Eduinnovatech-Cloud
 
-3. Configurar Entorno Virtual
+1. Configurar Entorno Virtual
 Bash
 
 python -m venv venv
-# En Windows:
+
+# En Windows
+
 .\venv\Scripts\activate
-# En Mac/Linux:
+
+# En Mac/Linux
+
 source venv/bin/activate
 
-4. Instalar Dependencias
+1. Instalar Dependencias
 Bash
 
 pip install -r requirements.txt
 
-5. Configurar Variables de Entorno
+1. Configurar Variables de Entorno
 
 Crea un archivo .env en la raíz del proyecto (este archivo está ignorado por git por seguridad). Copia el siguiente formato y rellena con tus datos de Azure:
 Fragmento de código
