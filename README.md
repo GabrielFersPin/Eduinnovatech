@@ -40,7 +40,8 @@ graph TD
     
     class SQL_Public,WebApp,OpenAI azure;
     class Sim,Local local;
-    ```
+```
+
 ---
 
 ##
@@ -65,7 +66,7 @@ Sigue estos pasos para levantar el entorno de desarrollo local.
 
 - ODBC Driver 17/18 for SQL Server.
 
-2. Clonar el repositorio
+1. Clonar el repositorio
 
 ```bash
 git clone [https://github.com/TU_USUARIO/Eduinnovatech-Cloud.git](https://github.com/TU_USUARIO/Eduinnovatech-Cloud.git)
