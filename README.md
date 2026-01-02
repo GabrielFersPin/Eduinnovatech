@@ -69,7 +69,7 @@ Sigue estos pasos para levantar el entorno de desarrollo local.
 1. Clonar el repositorio
 
 ```bash
-git clone [https://github.com/GabrielFersPin/Eduinnovatech.git](https://github.com/GabrielFersPin/Eduinnovatech.git)
+git clone https://github.com/GabrielFersPin/Eduinnovatech.git
 cd Eduinnovatech
 ```
 
