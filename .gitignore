@@ -1,0 +1,12 @@
+# Entornos virtuales (La carpeta de los 10k archivos)
+venv/
+env/
+.env
+
+# Archivos compilados de Python (Basura temporal)
+__pycache__/
+*.pyc
+
+# Archivos de sistema y logs
+.DS_Store
+*.log
