@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# 1. Instalar dependencias del sistema necesarias para ODBC 18
+# 1. Instalar dependencias del sistema necesarias para ODBC 18 y compilación
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     gnupg2 \
@@ -30,11 +30,17 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 4. Copiar el código de la aplicación
 COPY . .
 
-# 5. Exponer el puerto de Streamlit
+# 5. Configuración de Entorno para Streamlit y Azure
+ENV STREAMLIT_SERVER_PORT=8501
+ENV STREAMLIT_SERVER_ADDRESS=0.0.0.0
+ENV STREAMLIT_SERVER_ENABLE_CORS=false
+ENV STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION=false
+
+# 6. Exponer el puerto
 EXPOSE 8501
 
-# 6. Check de salud para Docker
-HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
+# 7. REMOVED HEALTHCHECK to avoid conflicts with Azure Probe
+# Azure will ping the port automatically.
 
-# 7. Comando de inicio
-ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# 8. Comando de inicio (Usando variables de entorno donde sea posible)
+ENTRYPOINT ["streamlit", "run", "app.py"]
