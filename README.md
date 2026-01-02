@@ -40,7 +40,7 @@ graph TD
     
     class SQL_Public,WebApp,OpenAI azure;
     class Sim,Local local;
-    '''
+    ```
 ---
 
 ##
