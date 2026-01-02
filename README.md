@@ -69,8 +69,8 @@ Sigue estos pasos para levantar el entorno de desarrollo local.
 1. Clonar el repositorio
 
 ```bash
-git clone [https://github.com/TU_USUARIO/Eduinnovatech-Cloud.git](https://github.com/TU_USUARIO/Eduinnovatech-Cloud.git)
-cd Eduinnovatech-Cloud
+git clone [https://github.com/GabrielFersPin/Eduinnovatech.git](https://github.com/GabrielFersPin/Eduinnovatech.git)
+cd Eduinnovatech
 ```
 
 1. Configurar Entorno Virtual
