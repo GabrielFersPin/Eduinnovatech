@@ -13,6 +13,7 @@
 
 El proyecto implementa un flujo de datos moderno donde la ingesta, el procesamiento y la visualización están desacoplados.
 
+```mermaid
 graph TD
     %% Definición de Nodos y Subgrafos
     subgraph Local ["💻 Local / Edge"]
@@ -39,14 +40,18 @@ graph TD
     
     class SQL_Public,WebApp,OpenAI azure;
     class Sim,Local local;
+    '''
+---
+
+##
 
 🧩 Componentes Clave
 
-    Azure SQL Database: Persistencia de datos relacional escalable.
+- **Azure SQL Database**: Persistencia de datos relacional escalable.
 
-    Python Simulation Engine: Scripts locales (Faker) que emulan el comportamiento de miles de estudiantes realizando exámenes simultáneamente.
+- **Python Simulation Engine**: Scripts locales (Faker) que emulan el comportamiento de miles de estudiantes realizando exámenes simultáneamente.
 
-    Streamlit & Docker: Interfaz de visualización contenerizada para despliegue continuo (CI/CD).
+- **Streamlit & Docker**: Interfaz de visualización contenerizada para despliegue continuo (CI/CD).
 
 🚀 Instalación y Configuración (Para Desarrolladores)
 
@@ -54,21 +59,22 @@ Sigue estos pasos para levantar el entorno de desarrollo local.
 
 1. Prerrequisitos
 
-    Python 3.9+
+- Python 3.9+
 
-    Cuenta de Azure activa (con SQL Database creada).
+- Cuenta de Azure activa (con SQL Database creada).
 
-    ODBC Driver 17/18 for SQL Server.
+- ODBC Driver 17/18 for SQL Server.
 
 2. Clonar el repositorio
-Bash
 
+```bash
 git clone [https://github.com/TU_USUARIO/Eduinnovatech-Cloud.git](https://github.com/TU_USUARIO/Eduinnovatech-Cloud.git)
 cd Eduinnovatech-Cloud
+```
 
 1. Configurar Entorno Virtual
-Bash
 
+```bash
 python -m venv venv
 
 # En Windows
@@ -78,57 +84,67 @@ python -m venv venv
 # En Mac/Linux
 
 source venv/bin/activate
+```
 
 1. Instalar Dependencias
-Bash
 
+```bash
 pip install -r requirements.txt
+```
 
 1. Configurar Variables de Entorno
 
 Crea un archivo .env en la raíz del proyecto (este archivo está ignorado por git por seguridad). Copia el siguiente formato y rellena con tus datos de Azure:
-Fragmento de código
+
+```ini
 
 DB_SERVER=tu-servidor.database.windows.net
 DB_NAME=sql-eduinnovatech-db
 DB_USER=tu_usuario_admin
 DB_PASSWORD=tu_password_secreto
+```
 
 🎮 Uso y Simulación
 Paso 1: Inicializar la Base de Datos
 
 Ejecuta este script una sola vez para crear las tablas necesarias en Azure si están vacías.
-Bash
 
+```bash
 python init_db.py
+```
 
 Paso 2: Iniciar el "Motor de Caos" (Simulador)
 
 Este script comenzará a generar alumnos y notas falsas cada pocos segundos, enviándolos a la nube.
-Bash
 
+```bash
 python data_generator.py
+```
 
 Deberías ver logs como: 👨‍🎓 Alumno: María | 📝 Nota: 85
+
 Paso 3: Lanzar Dashboard (Próximamente)
-Bash
 
+```bash
 streamlit run app.py
+```
 
-🗺️ Roadmap & Data Journey
+---
+
+## 🗺️ Roadmap & Data Journey
 
 Este proyecto sigue una evolución incremental basada en competencias profesionales de Cloud & Data Engineering:
 
-    [x] Fase 1: Infraestructura Base (Azure SQL) + Scripts de Ingesta (Python).
+- [x] Fase 1: Infraestructura Base (Azure SQL) + Scripts de Ingesta (Python).
 
-    [ ] Fase 2: Desarrollo de Dashboard de Analítica (Streamlit).
+- [ ] Fase 2: Desarrollo de Dashboard de Analítica (Streamlit).
 
-    [ ] Fase 3: Containerización y Despliegue (Docker + Azure ACR).
+- [ ] Fase 3: Containerización y Despliegue (Docker + Azure ACR).
 
-    [ ] Fase 4: Integración de IA para generación de preguntas (Azure OpenAI).
+- [ ] Fase 4: Integración de IA para generación de preguntas (Azure OpenAI).
 
 👥 Autores
 
-    Gabriel - Cloud Architecture & Data Engineering
+- Gabriel - Cloud Architecture & Data Engineering
 
-    [Nombre de tu Compañero]
+- [Nombre de tu Compañero]
