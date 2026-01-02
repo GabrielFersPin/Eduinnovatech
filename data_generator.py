@@ -14,7 +14,7 @@ server = os.getenv('DB_SERVER')
 database = os.getenv('DB_NAME')
 username = os.getenv('DB_USER')
 password = os.getenv('DB_PASSWORD')
-driver = '{ODBC Driver 17 for SQL Server}' # Si falla, prueba con 18
+driver = '{ODBC Driver 18 for SQL Server}' # Actualizado a versión 18 para Ubuntu 24.04
 
 # Inicializar generador de datos falsos (Español)
 fake = Faker('es_ES')
@@ -24,7 +24,7 @@ subjects = ['Matemáticas', 'Historia', 'Física', 'Literatura', 'Inglés', 'Pro
 
 def get_connection():
     # Construir cadena de conexión segura
-    conn_str = f'DRIVER={driver};SERVER={server};PORT=1433;DATABASE={database};UID={username};PWD={password}'
+    conn_str = f'DRIVER={driver};SERVER={server};PORT=1433;DATABASE={database};UID={username};PWD={password};Encrypt=yes;TrustServerCertificate=yes'
     try:
         return pyodbc.connect(conn_str)
     except Exception as e:

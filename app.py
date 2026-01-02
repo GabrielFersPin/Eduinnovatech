@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import pyodbc
+from sqlalchemy import create_engine
+import urllib
 import os
 from dotenv import load_dotenv
 import time
@@ -22,10 +24,15 @@ def get_connection():
     database = os.getenv('DB_NAME')
     username = os.getenv('DB_USER')
     password = os.getenv('DB_PASSWORD')
-    driver = '{ODBC Driver 17 for SQL Server}'
+    driver = '{ODBC Driver 18 for SQL Server}'
     
-    conn_str = f'DRIVER={driver};SERVER={server};PORT=1433;DATABASE={database};UID={username};PWD={password}'
-    return pyodbc.connect(conn_str)
+    # Construir cadena de conexión para SQLAlchemy
+    params = urllib.parse.quote_plus(
+        f'DRIVER={driver};SERVER={server};PORT=1433;DATABASE={database};UID={username};PWD={password};Encrypt=yes;TrustServerCertificate=yes'
+    )
+    conn_str = f'mssql+pyodbc:///?odbc_connect={params}'
+    engine = create_engine(conn_str)
+    return engine.connect()
 
 # 3. Función para leer datos
 def load_data():
