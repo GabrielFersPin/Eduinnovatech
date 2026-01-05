@@ -5,6 +5,8 @@ import os
 from faker import Faker
 from datetime import datetime
 from dotenv import load_dotenv
+import requests
+import jwt
 
 # 1. Cargar variables de entorno (Tus secretos)
 load_dotenv()
@@ -14,7 +16,7 @@ server = os.getenv('DB_SERVER')
 database = os.getenv('DB_NAME')
 username = os.getenv('DB_USER')
 password = os.getenv('DB_PASSWORD')
-driver = '{ODBC Driver 18 for SQL Server}' # Actualizado a versión 18 para Ubuntu 24.04
+driver = '{ODBC Driver 18 for SQL Server}' 
 
 # Inicializar generador de datos falsos (Español)
 fake = Faker('es_ES')
@@ -31,6 +33,37 @@ def get_connection():
         print(f"❌ Error conectando a Azure: {e}")
         return None
 
+def send_signalr_broadcast(message_text):
+    """Envía notificación Real-Time a la App"""
+    conn_str = os.getenv("AZURE_SIGNALR_CONNECTION_STRING")
+    if not conn_str:
+        return
+
+    try:
+        endpoint = conn_str.split(";")[0].replace("Endpoint=", "")
+        access_key = conn_str.split(";")[1].replace("AccessKey=", "")
+        hub_name = "olimpiada_hub"
+        api_url = f"{endpoint}/api/v1/hubs/{hub_name}"
+        
+        payload = {
+            "iat": int(time.time()),
+            "exp": int(time.time()) + 3600,
+            "aud": api_url
+        }
+        token = jwt.encode(payload, access_key, algorithm="HS256")
+        
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json"
+        }
+        data = {
+            "target": "*",
+            "arguments": [message_text]
+        }
+        requests.post(api_url, json=data, headers=headers)
+    except Exception as e:
+        print(f"⚠️ Error SignalR: {e}")
+
 def insert_student(cursor):
     # Generar datos aleatorios realistas
     name = fake.name()
@@ -42,7 +75,12 @@ def insert_student(cursor):
     query = "INSERT INTO Students (Name, Subject, Score, ExamDate) VALUES (?, ?, ?, ?)"
     cursor.execute(query, (name, subject, score, exam_date))
     
-    print(f"🚀 Enviado a Azure: {name} | 📚 {subject} | 📝 Nota: {score}")
+    # Mensaje de log local
+    log_msg = f"🚀 Enviado: {name} | {subject} | Nota: {score}"
+    print(log_msg)
+    
+    # 🔥 Notificar a la App en Tiempo Real
+    send_signalr_broadcast(f"Nuevo examen: {name} ha sacado un {score} en {subject}")
 
 def start_simulation():
     print("--- 📡 INICIANDO SIMULADOR EDUINNOVATECH ---")
