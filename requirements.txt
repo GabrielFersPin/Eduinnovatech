@@ -1,8 +1,12 @@
 streamlit
 pandas
 pyodbc
-python-dotenv
 faker
 numpy
 matplotlib
 sqlalchemy
+python-dotenv
+openai>=1.0.0
+azure-messaging-webpubsubservice
+requests
+pyjwt
