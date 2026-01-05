@@ -28,6 +28,7 @@ La solución implementa una arquitectura **Hub-and-Spoke** en la nube de Microso
 
 ### 2.1. Diagrama de Componentes (Nivel Lógico)
 
+```mermaid
 graph TD
     %% --- Estilos ---
     classDef azure fill:#0078d4,stroke:#fff,stroke-width:2px,color:#fff
@@ -46,14 +47,14 @@ graph TD
     %% --- Actores Actuales ---
     subgraph CurrentActors ["👥 Usuarios Actuales (Colegio)"]
         style CurrentActors fill:none,stroke:none
-        Student(["👤 Alumno"]) :::external
-        Teacher(["🎓 Profesor"]) :::external
-        Parent(["👪 Padre/Tutor"]) :::external
+        Student(["👤 Alumno"])
+        Teacher(["🎓 Profesor"])
+        Parent(["👪 Padre/Tutor"])
     end
 
-    EntraID{"🔐 Microsoft Entra ID<br/>(Auth Escolar)"} :::security
-    GitHub(("🐙 GitHub Actions<br/>(CI/CD)")) :::external
-    FrontDoor("🛡️ Azure Front Door<br/>(WAF & CDN Global)") :::security
+    EntraID{"🔐 Microsoft Entra ID<br/>(Auth Escolar)"}
+    GitHub(("🐙 GitHub Actions<br/>(CI/CD)"))
+    FrontDoor("🛡️ Azure Front Door<br/>(WAF & CDN Global)")
 
     %% --- MAIN REGION (West Europe) ---
     subgraph AzureRegion ["☁️ Primary Region (West Europe) - MVP Core"]
@@ -61,24 +62,24 @@ graph TD
 
         subgraph ComputeLayer ["⚡ App & Real-time"]
             style ComputeLayer fill:#fff,stroke:#ddd
-            AppService["📱 App Service<br/>(Python API)"] :::azure
-            SignalR(("📡 SignalR<br/>(WebSockets)")) :::realtime
+            AppService["📱 Apps Service<br/>(Python API)"]
+            SignalR(("📡 SignalR<br/>(WebSockets)"))
         end
 
         subgraph DataLayer ["🔒 VNet Data Layer"]
             style DataLayer fill:#eefbfb,stroke:#008080,stroke-width:2px
-            SQL[("🛢️ SQL Database<br/>Serverless")] :::data
-            Redis["🚀 Redis Cache"] :::data
-            OpenAI["🧠 OpenAI (GPT-4o)"] :::data
-            Storage["📦 Blob Storage<br/>(Assets)"] :::data
-            KeyVault["🔑 Key Vault"] :::security
-            ACR["🐳 ACR<br/>(Images)"] :::azure
+            SQL[("🛢️ SQL Database<br/>Serverless")]
+            Redis["🚀 Redis Cache"]
+            OpenAI["🧠 OpenAI (GPT-4o)"]
+            Storage["📦 Blob Storage<br/>(Assets)"]
+            KeyVault["🔑 Key Vault"]
+            ACR["🐳 ACR<br/>(Images)"]
         end
         
          subgraph Monitor ["📊 Observabilidad"]
              style Monitor fill:#fff,stroke:#ddd
-             AppInsights["📉 App Insights"] :::azure
-             LogAnalytics["📝 Log Analytics"] :::data
+             AppInsights["📉 App Insights"]
+             LogAnalytics["📝 Log Analytics"]
         end
     end
 
@@ -87,24 +88,24 @@ graph TD
     %% --- PHASE 1: Robustness (DR Region) ---
     subgraph AzureRegionDR ["🌨️ Secondary Region (North Europe) - PHASE 1 (DR)"]
         style AzureRegionDR fill:#fffaf4,stroke:#ff9800,stroke-dasharray: 5 5
-        SQL_DR[("�️ SQL Replica<br/>(Geo-Failover)")] :::future
+        SQL_DR[("️ SQL Replica<br/>(Geo-Failover)")]
     end
 
     %% --- PHASE 2: Functional (BI) ---
-    PowerBI["📊 Power BI Embedded<br/>(Analítica Avanzada - PHASE 2)"] :::future
+    PowerBI["📊 Power BI Embedded<br/>(Analítica Avanzada - PHASE 2)"]
 
     %% --- PHASE 3: Global Scale & B2C ---
-    subgraph FutureActors ["� Nuevos Usuarios (PHASE 3)"]
+    subgraph FutureActors [" Nuevos Usuarios (PHASE 3)"]
         style FutureActors fill:none,stroke:none
-        FamilyB2C(["👨‍👩‍👧‍👦 Familias B2C<br/>(Packs Refuerzo)"]) :::futureActor
+        FamilyB2C(["👨‍👩‍👧‍👦 Familias B2C<br/>(Packs Refuerzo)"])
     end
 
-    ADB2C{"🔐 Azure AD B2C<br/>(Auth Externa - PHASE 3)"} :::future
+    ADB2C{"🔐 Azure AD B2C<br/>(Auth Externa - PHASE 3)"}
 
     subgraph AzureRegionLATAM ["🌎 LatAm Region (Brazil South) - PHASE 3 (Scale)"]
         style AzureRegionLATAM fill:#fffaf4,stroke:#ff9800,stroke-dasharray: 5 5
-        AppServiceLATAM["📱 App Service LATAM"] :::future
-        SQL_LATAM[("�️ SQL LATAM<br/>(Replica/Sharded)")] :::future
+        AppServiceLATAM["📱 App Service LATAM"]
+        SQL_LATAM[("️ SQL LATAM<br/>(Replica/Sharded)")]
     end
 
 
@@ -129,27 +130,29 @@ graph TD
     %% --- Flows FUTURE / EXPANSION (Dashed Orange Lines) ---
     
     %% Phase 1 Connections
-    SQL -.- "Geo-Replication Async<br/>(Phase 1: HA)" .-> SQL_DR
-    linkStyle 16 stroke:#ff9800,stroke-dasharray: 5 5,color:#ff9800;
+    SQL -. "Geo-Replication Async<br/>(Phase 1: HA)" .-> SQL_DR
 
     %% Phase 2 Connections
-    SQL -.- "Datasets<br/>(Phase 2: BI)" .-> PowerBI
-    linkStyle 17 stroke:#ff9800,stroke-dasharray: 5 5,color:#ff9800;
-    Teacher -.- "View Dashboards" .-> PowerBI
-    linkStyle 18 stroke:#ff9800,stroke-dasharray: 5 5,color:#ff9800;
+    SQL -. "Datasets<br/>(Phase 2: BI)" .-> PowerBI
+    Teacher -. "View Dashboards" .-> PowerBI
 
     %% Phase 3 Connections
-    FamilyB2C -.- "Auth B2C<br/>(Phase 3)" .-> ADB2C
-    linkStyle 19 stroke:#ff9800,stroke-dasharray: 5 5,color:#ff9800;
-    ADB2C -.- "Token B2C" .-> AppService
-    linkStyle 20 stroke:#ff9800,stroke-dasharray: 5 5,color:#ff9800;
+    FamilyB2C -. "Auth B2C<br/>(Phase 3)" .-> ADB2C
+    ADB2C -. "Token B2C" .-> AppService
     
-    FrontDoor -.- "Latency-based Routing<br/>(Phase 3: Global)" .-> AppServiceLATAM
-    linkStyle 21 stroke:#ff9800,stroke-dasharray: 5 5,color:#ff9800;
-    AppServiceLATAM -.- "Local Data Access" .-> SQL_LATAM
-    linkStyle 22 stroke:#ff9800,stroke-dasharray: 5 5,color:#ff9800;
-    SQL -.- "Data Sync/Replication" .-> SQL_LATAM
-    linkStyle 23 stroke:#ff9800,stroke-dasharray: 5 5,color:#ff9800;
+    FrontDoor -. "Latency-based Routing<br/>(Phase 3: Global)" .-> AppServiceLATAM
+    AppServiceLATAM -. "Local Data Access" .-> SQL_LATAM
+    SQL -. "Data Sync/Replication" .-> SQL_LATAM
+
+    %% --- Asignación de Clases ---
+    class Student,Teacher,Parent,GitHub external;
+    class EntraID,FrontDoor,KeyVault security;
+    class AppService,ACR,AppInsights,AppServiceLATAM azure;
+    class SignalR realtime;
+    class SQL,Redis,OpenAI,Storage,LogAnalytics data;
+    class SQL_DR,PowerBI,FamilyB2C,ADB2C,SQL_LATAM future;
+    class FamilyB2C futureActor;
+```
 
 ### 2.2. Descripción de Componentes Clave
 
