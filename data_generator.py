@@ -89,9 +89,9 @@ def send_signalr_broadcast(message_text):
     except:
         pass
 
-def insert_student_activity(cursor):
-    # Simular que un alumno responde una pregunta
-    name = random.choice(STUDENTS)
+def insert_student_activity(cursor, name):
+    # Simular que un alumno específico responde una pregunta
+    # name = random.choice(STUDENTS)  <-- ELIMINADO
     question_data = random.choice(EXAM_QUESTIONS)
     exercise_name = question_data["q"]
     
@@ -129,11 +129,29 @@ def start_simulation():
 
     cursor = conn.cursor()
 
+    progress_tracker = {student: 0 for student in STUDENTS}
+    MAX_QUESTIONS = 40
+
     try:
         while True:
-            insert_student_activity(cursor)
+            # Filtrar alumnos que aún no han terminado
+            active_students = [s for s in STUDENTS if progress_tracker[s] < MAX_QUESTIONS]
+            
+            if not active_students:
+                print("\n✅ ¡Todos los alumnos han completado el examen (40 preguntas)!")
+                break
+
+            # Elegir un alumno activo
+            current_student = random.choice(active_students)
+            
+            # Simular pregunta para este alumno
+            insert_student_activity(cursor, current_student)
+            
+            # Actualizar contador
+            progress_tracker[current_student] += 1
+            
             conn.commit()
-            time.sleep(random.uniform(1.0, 3.0)) # Ritmo de examen
+            time.sleep(random.uniform(0.5, 1.5)) # Ritmo un poco más rápido
 
     except KeyboardInterrupt:
         print("\n🛑 Examen finalizado.")

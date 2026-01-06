@@ -9,12 +9,12 @@
 
 Ve el sistema en acción, incluyendo el **Portal del Profesor** (tiempo real) y la vista de **Familia**:
 
-<video src="assets/demo.webm" controls="controls" style="max-width: 100%;">
+<video src="assets/MVP.mp4" controls="controls" style="max-width: 100%;">
   Tu navegador no soporta el tag de video.
-  <a href="assets/demo.webm">Enlace al video</a>
+  <a href="assets/MVP.mp4">Enlace al video</a>
 </video>
 
-> **Nota:** Si el video no se reproduce, [descárgalo aquí](assets/demo.webm).
+> **Nota:** Si el video no se reproduce, [descárgalo aquí](assets/MVP.mp4).
 
 ## 1. Visión General y Objetivos
 
