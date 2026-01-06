@@ -129,7 +129,6 @@ def start_simulation():
 
     cursor = conn.cursor()
 
-    try:
     progress_tracker = {student: 0 for student in STUDENTS}
     MAX_QUESTIONS = 40
 
