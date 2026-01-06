@@ -83,8 +83,8 @@ def vista_profesor(engine):
     if not engine: st.error("Sin conexión a BD"); return
 
     with engine.connect() as conn:
-        # Traer todo el historial del examen actual
-        df = pd.read_sql("SELECT * FROM Students WHERE Subject = 'Matemáticas' ORDER BY ExamDate DESC", conn)
+        # Traer historial de HOY solamente
+        df = pd.read_sql("SELECT * FROM Students WHERE Subject = 'Matemáticas' AND ExamDate >= CAST(GETDATE() AS DATE) ORDER BY ExamDate DESC", conn)
 
     if not df.empty:
         # Calcular métricas acumuladas por alumno
@@ -94,40 +94,61 @@ def vista_profesor(engine):
             CorrectAnswers=('IsCorrect', 'sum')
         ).reset_index()
         
-        # TABLERO KANBAN DE ALUMNOS
-        st.markdown(f"### 📋 Alumnos Activos ({len(student_stats)})")
+        # --- TABS: ORGANIZACIÓN DE VISTA ---
+        tab_monitor, tab_actions = st.tabs(["📊 Monitor de Clase", "⚠️ Acciones / Avisos"])
         
-        cols = st.columns(4)
-        for idx, row in student_stats.iterrows():
-            col = cols[idx % 4]
-            with col:
-                # Determinar color de tarjeta
-                score = row['AvgScore']
-                status_color = "green" if score >= 70 else "orange" if score >= 50 else "red"
-                
-                with st.expander(f"👤 {row['Name']} ({score:.0f}/100)", expanded=True):
-                    st.progress(row['AvgScore']/100, text=f"Progreso: {row['QuestionsDone']} preguntas")
+        with tab_monitor:
+            # TABLERO KANBAN DE ALUMNOS
+            st.markdown(f"### 📋 Alumnos Activos ({len(student_stats)})")
+            
+            cols = st.columns(4)
+            for idx, row in student_stats.iterrows():
+                col = cols[idx % 4]
+                with col:
+                    # Determinar color de tarjeta
+                    score = row['AvgScore']
+                    status_color = "green" if score >= 70 else "orange" if score >= 50 else "red"
                     
-                    # Mostrar últimas 3 respuestas CON EL CONTENIDO REAL
-                    student_history = df[df['Name'] == row['Name']].head(3)
-                    st.markdown("---")
-                    for _, ex in student_history.iterrows():
-                        icon = "✅" if ex['IsCorrect'] else "❌"
-                        # Aquí mostramos: Icono | Pregunta | RESPUESTA DEL ALUMNO
-                        st.markdown(f"{icon} **{ex['ExerciseName']}**")
-                        st.markdown(f"&nbsp;&nbsp;&nbsp;↳ ✍️ *{ex['StudentAnswer']}*")
+                    with st.expander(f"👤 {row['Name']} ({score:.0f}/100)", expanded=True):
+                        st.progress(row['AvgScore']/100, text=f"Progreso: {row['QuestionsDone']} preguntas")
+                        
+                        # Mostrar últimas 3 respuestas CON EL CONTENIDO REAL
+                        student_history = df[df['Name'] == row['Name']].head(3)
+                        st.markdown("---")
+                        for _, ex in student_history.iterrows():
+                            icon = "✅" if ex['IsCorrect'] else "❌"
+                            # Aquí mostramos: Icono | Pregunta | RESPUESTA DEL ALUMNO
+                            st.markdown(f"{icon} **{ex['ExerciseName']}**")
+                            st.markdown(f"&nbsp;&nbsp;&nbsp;↳ ✍️ *{ex['StudentAnswer']}*")
 
-        # ZONA DE DATOS GLOBALES
-        st.divider()
-        c1, c2 = st.columns(2)
-        with c1:
-            st.markdown("### 📊 Rendimiento del Examen")
-            st.bar_chart(student_stats.set_index('Name')['AvgScore'])
-        with c2:
-            st.markdown("### 🛑 Alumnos en Dificultad")
-            # Mostrar tabla detallada de los que van mal
-            low_performers = student_stats[student_stats['AvgScore'] < 50]
-            st.dataframe(low_performers[['Name', 'AvgScore', 'QuestionsDone']], hide_index=True)
+            # ZONA DE DATOS GLOBALES
+            st.divider()
+            c1, c2 = st.columns(2)
+            with c1:
+                st.markdown("### 📊 Rendimiento del Examen")
+                st.bar_chart(student_stats.set_index('Name')['AvgScore'])
+            with c2:
+                st.markdown("### 🛑 Alumnos en Dificultad")
+                # Mostrar tabla detallada de los que van mal
+                low_performers = student_stats[student_stats['AvgScore'] < 50]
+                st.dataframe(low_performers[['Name', 'AvgScore', 'QuestionsDone']], hide_index=True)
+
+        with tab_actions:
+            st.subheader("📢 Centro de Notificaciones")
+            st.info("Envía mensajes urgentes a todos los dispositivos de los alumnos.")
+            
+            c_msg, c_btn = st.columns([3, 1])
+            with c_msg:
+                msg = st.text_input("Mensaje de Broadcast", "⚠️ Quedan 5 minutos para finalizar.")
+            with c_btn:
+                st.write("") # Spacer
+                st.write("") 
+                if st.button("🔴 Enviar Aviso", type="primary"):
+                    if send_signalr_broadcast(msg):
+                        st.toast(f"Mensaje enviado: {msg}", icon="✅")
+                        st.success("Notificación enviada correctamente.")
+                    else:
+                        st.error("Error al conectar con SignalR.")
 
     else:
         st.info("ℹ️ Esperando a que comience el examen (inicia 'data_generator.py')...")
