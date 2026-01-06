@@ -5,6 +5,17 @@
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-Development-yellow?style=for-the-badge)
 
+## 🎥 Demo en Vivo
+
+Ve el sistema en acción, incluyendo el **Portal del Profesor** (tiempo real) y la vista de **Familia**:
+
+<video src="assets/demo.webm" controls="controls" style="max-width: 100%;">
+  Tu navegador no soporta el tag de video.
+  <a href="assets/demo.webm">Enlace al video</a>
+</video>
+
+> **Nota:** Si el video no se reproduce, [descárgalo aquí](assets/demo.webm).
+
 ## 1. Visión General y Objetivos
 
 **EduInnovatech** nace con la misión de democratizar la tecnología educativa de alto rendimiento. El proyecto no es solo una herramienta de evaluación, sino un ecosistema integral que conecta a **Alumnos, Profesores y Familias** en un entorno seguro y escalable.
