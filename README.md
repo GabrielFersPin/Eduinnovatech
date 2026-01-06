@@ -9,12 +9,9 @@
 
 Ve el sistema en acción, incluyendo el **Portal del Profesor** (tiempo real) y la vista de **Familia**:
 
-<video src="assets/MVP.mp4" controls="controls" style="max-width: 100%;">
-  Tu navegador no soporta el tag de video.
-  <a href="assets/MVP.mp4">Enlace al video</a>
-</video>
+![Demo en Vivo](assets/demo.gif)
 
-> **Nota:** Si el video no se reproduce, [descárgalo aquí](assets/MVP.mp4).
+> **Nota:** Si la animación no carga, [descárgalo aquí](assets/MVP.mp4).
 
 ## 1. Visión General y Objetivos
 
