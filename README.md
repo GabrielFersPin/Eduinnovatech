@@ -7,7 +7,7 @@
 
 ## 🎥 Demo en Vivo
 
-Ve el sistema en acción, incluyendo el **Portal del Profesor** (tiempo real) y la vista de **Familia**:
+Ve el sistema en acción:
 
 ![Demo en Vivo](assets/demo.gif)
 
