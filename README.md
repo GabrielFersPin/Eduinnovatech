@@ -7,7 +7,7 @@
 
 ## 🎥 Demo en Vivo
 
-Ve el sistema en acción, incluyendo el **Portal del Profesor** (tiempo real) y la vista de **Familia**:
+Ve el sistema en acción:
 
 <video src="assets/MVP.mp4" controls="controls" style="max-width: 100%;">
   Tu navegador no soporta el tag de video.
